@@ -13,7 +13,7 @@ Python module to solve transportation problems.
 
 There are many great algorithm out there to solve a transport problem.
 However, i started to write my own module to find a potential solution and get a better understanding in impementing
-algorithmen in code.
+algorithmen in code. 
 
 ## Getting Started
 
@@ -22,17 +22,19 @@ your python library folder and get started.
 
 ### Requirements
 
-You need:
 * Python > 3.6
 * numpy library
 * math library
 
 ### Installation
-WIP
+
+Clone module in your pythonpath.
 
 ## Usage
-Implement the module. Create an object with demand, supply and cost informations and call one methode to find a solution.
+
+Import the module. Create an object with demand, supply and cost informations and call one methode to find a solution.
 
 
 ## Contact
-WIP
+
+Dominik
