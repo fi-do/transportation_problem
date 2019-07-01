@@ -5,7 +5,7 @@ Python module to solve transportation problems.
 * [About the Project](#about-the-project)
 * [Getting Started](#getting-started)
   * [Requirements](#requirements)
-  * [Installation[(#installation)
+  * [Installation](#installation)
 * [Usage](#usage)
 * [Contact](#contact)
 
