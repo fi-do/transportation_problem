@@ -38,6 +38,16 @@ class OR(object):
 
         return self.transport_matrix
 
+    def cm_rule(self):
+        column_label = []
+        row_label = []
+        column = 0
+        row = 0
+        j = 0
+
+
+
+
 
 def main():
     transport_matrix = np.zeros((2, 3))
