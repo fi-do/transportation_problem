@@ -7,6 +7,7 @@ import math
 #       -Add column minima method
 #       -Add MODI method
 #       -Helper function for calculating transport amount
+#       -Building useful class
 
 class OR(object):
 
@@ -49,6 +50,9 @@ class OR(object):
         infinity = math.inf
 
         while len(columns) > 0:
+
+            j = min(columns)
+
             tmp = self.cost_matrix[:, j]
             tmp = tmp.tolist()
 
@@ -76,9 +80,6 @@ class OR(object):
 
             if self.demand_vector[j] == 0:
                 columns.remove(j)
-            print(j)
-
-            if j
 
         return self.transport_matrix
 
