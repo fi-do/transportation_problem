@@ -18,35 +18,40 @@ class OR(object):
         self.transport_matrix = np.zeros((s_v.size, d_v.size))
         self.total_costs = 0
 
+
     def nwc_rule(self):
         j = 0
         i = 0
+        s_v_tmp = np.copy(self.supply_vector)
+        d_v_tmp = np.copy(self.demand_vector)
+        t_m_tmp = np.copy(self.transport_matrix)
 
-        while j < self.demand_vector.size and i < self.supply_vector.size:
-            if self.demand_vector[j] >= self.supply_vector[i]:
-                amount = self.supply_vector[i]
-                # print("Nachfrage größer", amount)
+        while j < d_v_tmp.size and i < s_v_tmp.size:
+            if d_v_tmp[j] >= s_v_tmp[i]:
+                amount = s_v_tmp[i]
+                # print("Demand is bigger", amount)
             else:
-                amount = self.demand_vector[j]
-                # print("Angebot größer", amount)
+                amount = d_v_tmp[j]
+                # print("Supply is bigger", amount)
 
-            self.demand_vector[j] = self.demand_vector[j] - amount
-            self.supply_vector[i] = self.supply_vector[i] - amount
-            self.transport_matrix[i][j] = amount
+            d_v_tmp[j] = d_v_tmp[j] - amount
+            s_v_tmp[i] = s_v_tmp[i] - amount
+            t_m_tmp[i][j] = amount
 
-            if self.supply_vector[i] == 0:
+            if s_v_tmp[i] == 0:
                 i += 1
             else:
                 j += 1
 
-        return self.transport_matrix
+        return t_m_tmp
 
     def cm_rule(self):
-        columns = list(range(0, self.demand_vector.size))
-        rows = list(range(0, self.supply_vector.size))
-        i = 0
-        j = 0
-        minima = 0
+        s_v_tmp = np.copy(self.supply_vector)
+        d_v_tmp = np.copy(self.demand_vector)
+        t_m_tmp = np.copy(self.transport_matrix)
+
+        columns = list(range(0, d_v_tmp.size))
+        rows = list(range(0, s_v_tmp.size))
         infinity = math.inf
 
         while len(columns) > 0:
@@ -64,41 +69,42 @@ class OR(object):
                 minima = min(tmp)
                 i = tmp.index(minima)
 
-            if self.demand_vector[j] >= self.supply_vector[i]:
-                amount = self.supply_vector[i]
+            if d_v_tmp[j] >= s_v_tmp[i]:
+                amount = s_v_tmp[i]
                 # print("Nachfrage größer", amount)
             else:
-                amount = self.demand_vector[j]
+                amount = d_v_tmp[j]
                 # print("Angebot größer", amount)
 
-            self.demand_vector[j] = self.demand_vector[j] - amount
-            self.supply_vector[i] = self.supply_vector[i] - amount
-            self.transport_matrix[i][j] = amount
+            d_v_tmp[j] = d_v_tmp[j] - amount
+            s_v_tmp[i] = s_v_tmp[i] - amount
+            t_m_tmp[i][j] = amount
 
-            if self.supply_vector[i] == 0:
+            if s_v_tmp[i] == 0:
                 rows.remove(i)
 
-            if self.demand_vector[j] == 0:
+            if d_v_tmp[j] == 0:
                 columns.remove(j)
 
-        return self.transport_matrix
+        return t_m_tmp
 
 
 def main():
-    transport_matrix = np.zeros((2, 3))
     supply_vector = np.array([20, 40, 30])
     demand_vector = np.array([20, 20, 20, 15, 15])
     cost_matrix = np.array([[10, 15, 9, 13, 12],
                             [11, 30, 4, 13, 12],
                             [12, 13, 4, 1, 122]])
 
-    # test = OR(supply_vector, demand_vector, cost_matrix)
-    test2 = OR(supply_vector, demand_vector, cost_matrix)
+    test = OR(supply_vector, demand_vector, cost_matrix)
 
-    # print(test.nwc_rule())
-
-    print(test2.cm_rule())
-
+    # Debug Ausgabe
+    print("Column minima rule")
+    print(test.cm_rule())
+    print("North west corner rule")
+    print(test.nwc_rule())
+    print("Column minima rule")
+    print(test.cm_rule())
 
 if __name__ == "__main__":
     main()
