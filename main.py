@@ -6,6 +6,7 @@ import math
 #       -Improve algorithm to calculate unequal demand and supply vectors
 #       -Add column minima method
 #       -Add MODI method
+#       -Helper function for calculating transport amount
 
 class OR(object):
 
@@ -40,41 +41,44 @@ class OR(object):
         return self.transport_matrix
 
     def cm_rule(self):
-        column_label = list(range(0, self.demand_vector.size))
-        row_label = []
-        column = 0
-        row = 0
+        columns = list(range(0, self.demand_vector.size))
+        rows = list(range(0, self.supply_vector.size))
+        i = 0
         j = 0
         minima = 0
         infinity = math.inf
 
-        while len(column_label) > 0 and len(row_label) != self.supply_vector.size - 1:
+        while len(columns) > 0:
             tmp = self.cost_matrix[:, j]
             tmp = tmp.tolist()
-            for r in row_label:
-                tmp[r] = infinity
-            minima = min(tmp)
-            row = tmp.index(minima)
 
-            if self.demand_vector[j] >= self.supply_vector[row]:
-                amount = self.supply_vector[row]
+            minima = min(tmp)
+            i = tmp.index(minima)
+
+            if i not in rows:
+                tmp[i] = infinity
+                minima = min(tmp)
+                i = tmp.index(minima)
+
+            if self.demand_vector[j] >= self.supply_vector[i]:
+                amount = self.supply_vector[i]
                 # print("Nachfrage größer", amount)
             else:
                 amount = self.demand_vector[j]
                 # print("Angebot größer", amount)
 
             self.demand_vector[j] = self.demand_vector[j] - amount
-            self.supply_vector[row] = self.supply_vector[row] - amount
-            self.transport_matrix[row][j] = amount
+            self.supply_vector[i] = self.supply_vector[i] - amount
+            self.transport_matrix[i][j] = amount
 
-            if self.demand_vector[j] == 0 and self.demand_vector.size > 0:
-                column_label.remove(j)
+            if self.supply_vector[i] == 0:
+                rows.remove(i)
 
-            if (self.supply_vector[j] == 0 and self.demand_vector[row] != 0) or (
-                    self.demand_vector[row] == 0 and self.supply_vector[row] == 0 and j in column_label):
-                row_label.append(row)
+            if self.demand_vector[j] == 0:
+                columns.remove(j)
+            print(j)
 
-            j += 1
+            if j
 
         return self.transport_matrix
 
