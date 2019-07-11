@@ -59,7 +59,7 @@ class OR(object):
             minima = min(tmp)
             i = tmp.index(minima)
 
-            if i not in rows:
+            while i not in rows:
                 tmp[i] = infinity
                 minima = min(tmp)
                 i = tmp.index(minima)
@@ -86,10 +86,11 @@ class OR(object):
 
 def main():
     transport_matrix = np.zeros((2, 3))
-    supply_vector = np.array([20, 40])
-    demand_vector = np.array([20, 20, 20])
-    cost_matrix = np.array([[10, 15, 9],
-                            [11, 30, 4]])
+    supply_vector = np.array([20, 40, 30])
+    demand_vector = np.array([20, 20, 20, 15, 15])
+    cost_matrix = np.array([[10, 15, 9, 13, 12],
+                            [11, 30, 4, 13, 12],
+                            [12, 13, 4, 1, 122]])
 
     # test = OR(supply_vector, demand_vector, cost_matrix)
     test2 = OR(supply_vector, demand_vector, cost_matrix)
