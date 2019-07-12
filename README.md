@@ -13,7 +13,7 @@ Python module to solve transportation problems.
 
 There are many great algorithm out there to solve a transport problem.
 However, i started to write my own module to find a potential solution and get a better understanding in impementing
-algorithmen in code. 
+algorithms in code. 
 
 ## Getting Started
 
@@ -28,12 +28,34 @@ your python library folder and get started.
 
 ### Installation
 
-Clone module in your pythonpath.
+Clone module in your python path.
 
 ## Usage
 
-Import the module. Create an object with demand, supply and cost informations and call one methode to find a solution.
+Import the module. Create an object with demand, supply and cost informations and call one method to find a solution.
+At the moment you can only call the column minma(=cm_rule) rule or north west corner rule(=nwc_rule) to get an
+transport matrix and total costs. 
 
+## Example
+
+```
+import tp
+import np
+
+supply_vector = np.array([20, 40, 30])
+demand_vector = np.array([20, 20, 20, 15, 15])
+cost_matrix = np.array([[10, 15, 9, 13, 12],
+                        [11, 30, 4, 13, 12],
+                        [12, 13, 4, 1, 122]])
+                        
+problem = tp.Solver(supply_vector, demand_vector, cost_matrix)
+
+matrix, costs = problem.nwc_rule()
+
+print(matrix)
+print(costs)
+
+```
 
 ## Contact
 
