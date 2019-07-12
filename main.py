@@ -1,10 +1,8 @@
 import numpy as np
-import math
+import math as magic
 
 
-# Todo: -Calulcate costs in each method(or seperate cost calculation in own function)
-#       -Improve algorithm to calculate unequal demand and supply vectors
-#       -Add column minima method
+# Todo: -Improve algorithm to calculate unequal demand and supply vectors
 #       -Add MODI method
 #       -Helper function for calculating transport amount
 #       -Building useful class
@@ -16,8 +14,6 @@ class OR(object):
         self.demand_vector = d_v
         self.cost_matrix = c_m
         self.transport_matrix = np.zeros((s_v.size, d_v.size))
-        self.total_costs = 0
-
 
     def nwc_rule(self):
         j = 0
@@ -43,7 +39,9 @@ class OR(object):
             else:
                 j += 1
 
-        return t_m_tmp
+        total_costs = self.__costs(t_m_tmp)
+
+        return t_m_tmp, total_costs
 
     def cm_rule(self):
         s_v_tmp = np.copy(self.supply_vector)
@@ -52,7 +50,7 @@ class OR(object):
 
         columns = list(range(0, d_v_tmp.size))
         rows = list(range(0, s_v_tmp.size))
-        infinity = math.inf
+        infinity = magic.inf
 
         while len(columns) > 0:
 
@@ -71,10 +69,10 @@ class OR(object):
 
             if d_v_tmp[j] >= s_v_tmp[i]:
                 amount = s_v_tmp[i]
-                # print("Nachfrage größer", amount)
+                # print("Demand is bigger", amount)
             else:
                 amount = d_v_tmp[j]
-                # print("Angebot größer", amount)
+                # print("Supply  is bigger", amount)
 
             d_v_tmp[j] = d_v_tmp[j] - amount
             s_v_tmp[i] = s_v_tmp[i] - amount
@@ -86,7 +84,15 @@ class OR(object):
             if d_v_tmp[j] == 0:
                 columns.remove(j)
 
-        return t_m_tmp
+        total_costs = self.__costs(t_m_tmp)
+
+        return t_m_tmp, total_costs
+
+    def __costs(self, transport_matrix):
+
+        tmp = np.multiply(transport_matrix, self.cost_matrix)
+
+        return tmp.sum()
 
 
 def main():
@@ -96,15 +102,23 @@ def main():
                             [11, 30, 4, 13, 12],
                             [12, 13, 4, 1, 122]])
 
+    # Debug
     test = OR(supply_vector, demand_vector, cost_matrix)
 
-    # Debug Ausgabe
-    print("Column minima rule")
-    print(test.cm_rule())
-    print("North west corner rule")
-    print(test.nwc_rule())
-    print("Column minima rule")
-    print(test.cm_rule())
+    # Test column minima rule
+    matrix, costs = test.cm_rule()
+    print("Column Minima Rule")
+    print("Matrix: \n ", matrix)
+    print("Total costs: ", costs)
+
+    # Test north west corner rule
+    matrix, costs = test.nwc_rule()
+    print("North West Corner Rule")
+    print("Matrix: \n", matrix)
+    print("Total costs: ", costs)
+
+
+
 
 if __name__ == "__main__":
     main()
