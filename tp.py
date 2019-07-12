@@ -3,11 +3,14 @@ import math as magic
 
 
 # Todo: -Improve algorithm to calculate unequal demand and supply vectors
+#       -Implement the ability to solve a tp with more stages than one
 #       -Add MODI method
 #       -Helper function for calculating transport amount
 #       -Building useful class
+#       -Implement tests
+#       -
 
-class OR(object):
+class Solver(object):
 
     def __init__(self, s_v, d_v, c_m):
         self.supply_vector = s_v
@@ -103,16 +106,18 @@ def main():
                             [12, 13, 4, 1, 122]])
 
     # Debug
-    test = OR(supply_vector, demand_vector, cost_matrix)
+    print("Debug")
+
+    problem = Solver(supply_vector, demand_vector, cost_matrix)
 
     # Test column minima rule
-    matrix, costs = test.cm_rule()
+    matrix, costs = problem.cm_rule()
     print("Column Minima Rule")
     print("Matrix: \n ", matrix)
     print("Total costs: ", costs)
 
     # Test north west corner rule
-    matrix, costs = test.nwc_rule()
+    matrix, costs = problem.nwc_rule()
     print("North West Corner Rule")
     print("Matrix: \n", matrix)
     print("Total costs: ", costs)
