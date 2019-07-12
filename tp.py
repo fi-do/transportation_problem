@@ -8,7 +8,8 @@ import math as magic
 #       -Helper function for calculating transport amount
 #       -Building useful class
 #       -Implement tests
-#       -
+#       -Finding python style guides to improve code
+#       -Exception handling
 
 class Solver(object):
 
