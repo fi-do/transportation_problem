@@ -11,13 +11,13 @@ Python module to solve transportation problems.
 
 ## About the Project
 
-There are many great algorithm out there to solve a transport problem.
+There are many great algorithm out there to solve a transportation problems.
 However, i started to write my own module to find a potential solution and get a better understanding in impementing
 algorithms in code. 
 
 ## Getting Started
 
-My goal is to release a simple python module to calculate potential and optimal solutions. So clone the main.py to
+My goal is to release a simple python module to calculate potential and optimal solutions. So clone the tp.py to
 your python library folder and get started.
 
 ### Requirements
