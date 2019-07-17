@@ -2,6 +2,7 @@ import numpy as np
 
 
 # Todo: -Improve algorithm to calculate unequal demand and supply vectors
+#       -Fix costs calculation by unequal demand and supply
 #       -Implement the ability to solve a tp with more stages than one
 #       -Add MODI method
 #       -Helper function for calculating transport amount
@@ -22,7 +23,7 @@ class Solver(object):
     def nwc_rule(self):
         j = 0
         i = 0
-        s_v_tmp, d_v_tmp, t_m_tmp, c_m_tmp = self.__surplus()
+        s_v_tmp, d_v_tmp, t_m_tmp, c_m_tmp, surplus = self.__surplus()
 
         while j < d_v_tmp.size and i < s_v_tmp.size:
             if d_v_tmp[j] >= s_v_tmp[i]:
@@ -46,7 +47,7 @@ class Solver(object):
         return t_m_tmp, total_costs
 
     def cm_rule(self):
-        s_v_tmp, d_v_tmp, t_m_tmp, c_m_tmp = self.__surplus()
+        s_v_tmp, d_v_tmp, t_m_tmp, c_m_tmp, surplus = self.__surplus()
 
         columns = list(range(0, d_v_tmp.size))
         rows = list(range(0, s_v_tmp.size))
@@ -63,11 +64,15 @@ class Solver(object):
             i = tmp.index(minima)
 
             while i not in rows:
+
+                if surplus == "demand" and len(rows) == 1:
+                    i = s_v_tmp.size - 1
+                    break
+
                 tmp[i] = infinity
                 minima = min(tmp)
                 i = tmp.index(minima)
 
-                # If demand surplus
                 if not rows:
                     break
 
@@ -82,11 +87,11 @@ class Solver(object):
             s_v_tmp[i] = s_v_tmp[i] - amount
             t_m_tmp[i][j] = amount
 
-            if s_v_tmp[i] == 0:
+            if s_v_tmp[i] == 0 or (np.sum(d_v_tmp) == 0 and s_v_tmp[i] == infinity):
                 rows.remove(i)
 
             # to avoid loop if there is an supply surplus
-            if d_v_tmp[j] == 0 or (np.sum(s_v_tmp) == 0 and d_v_tmp[j] == np.inf):
+            if d_v_tmp[j] == 0 or (np.sum(s_v_tmp) == 0 and d_v_tmp[j] == infinity):
                 columns.remove(j)
 
         total_costs = self.__costs(t_m_tmp, c_m_tmp)
@@ -113,13 +118,26 @@ class Solver(object):
             new_column_tmp = np.zeros((s_v_tmp.size, 1))
             t_m_tmp = np.append(t_m_tmp, new_column_tmp, axis=1)
             c_m_tmp = np.append(c_m_tmp, new_column_tmp, axis=1)
+            surplus = "supply"
 
-        return s_v_tmp, d_v_tmp, t_m_tmp, c_m_tmp
+        # Demand surplus, add entry supply vector and row to cost- and transport matrix
+        elif np.sum(s_v_tmp) < np.sum(d_v_tmp):
+            s_v_tmp = np.append(s_v_tmp, infinity)
+            new_row_t_tmp = np.zeros((1, d_v_tmp.size))
+            new_row_c_tmp = np.full((1, d_v_tmp.size), infinity)
+            t_m_tmp = np.append(t_m_tmp, new_row_t_tmp, axis=0)
+            c_m_tmp = np.append(c_m_tmp, new_row_c_tmp, axis=0)
+            surplus = "demand"
+
+        else:
+            surplus = 0
+
+        return s_v_tmp, d_v_tmp, t_m_tmp, c_m_tmp, surplus
 
 
 
 def main():
-    supply_vector = np.array([20, 40, 40])
+    supply_vector = np.array([20, 40, 30])
     demand_vector = np.array([20, 20, 20, 15, 15])
     cost_matrix = np.array([[10, 15, 9, 13, 12],
                             [11, 30, 4, 13, 12],
