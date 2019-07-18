@@ -93,7 +93,7 @@ class Solver(object):
             if d_v_tmp[j] == 0 or (np.sum(s_v_tmp) == 0 and d_v_tmp[j] == infinity):
                 columns.remove(j)
 
-        total_costs, surplus = self.__costs(t_m_tmp, c_m_tmp)
+        total_costs, surplus = self.__costs(t_m_tmp)
 
         return t_m_tmp, total_costs, surplus
 
@@ -162,11 +162,11 @@ def main():
     matrix, costs, surplus = problem.cm_rule()
     print("Column Minima Rule")
     print("Matrix: \n ", matrix)
-    print("Total costs: \n ", costs)
+    print("Total costs: ", costs)
     print("Surplus in units: ", surplus)
 
     # Test north west corner rule
-    matrix, costs = problem.nwc_rule()
+    matrix, costs, surplus = problem.nwc_rule()
     print("North West Corner Rule")
     print("Matrix: \n", matrix)
     print("Total costs: ", costs)

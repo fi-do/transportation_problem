@@ -24,7 +24,6 @@ your python library folder and get started.
 
 * Python > 3.6
 * numpy library
-* math library
 
 ### Installation
 
@@ -54,6 +53,7 @@ matrix, costs = problem.nwc_rule()
 
 print(matrix)
 print(costs)
+print(surplus)
 
 ```
 
