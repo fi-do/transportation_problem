@@ -13,7 +13,7 @@ Python module to solve transportation problems.
 
 There are many great algorithm out there to solve a transportation problems.
 However, i started to write my own module to find a potential solution and get a better understanding in impementing
-algorithms in code. 
+algorithms in code. I tried to orient myself to the content of Wolfgang Domschke.
 
 ## Getting Started
 
